@@ -34,7 +34,6 @@ app.use(session({
 
 const mysql = require('mysql2');
 
-const dbConnection = mysql.createConnection(process.env.DATABASE_URL || 'mysql://fspaghetti3:fred1231@process.env.PORT/tb_db')
 
 let connection;
 
