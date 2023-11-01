@@ -1,7 +1,7 @@
 // routes/user-routes.js
 const router = require('express').Router();
 const { User } = require('../models');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const withAuth = require('../middleware/auth');
 
 router.get('/login', (req, res) => {
