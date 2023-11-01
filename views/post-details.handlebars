@@ -10,7 +10,6 @@
     <p>By: {{post.user.username}}</p>
     <p>{{post.content}}</p>
 
-    <!-- Form for adding a new comment -->
     <h3>Add a Comment:</h3>
     <form action="/comments" method="POST">
         <textarea name="content" placeholder="Your comment here..." required></textarea><br>
@@ -29,7 +28,6 @@
             </form>
     {{/if}}
 
-    <!-- Placeholder for comments -->
     <h2>Comments:</h2>
     <ul>
         {{#each post.comments}}
@@ -48,7 +46,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     deleteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
-            e.preventDefault(); // prevent the default action (navigation)
+            e.preventDefault();
             
             const postId = e.target.getAttribute('data-id');
             
@@ -57,7 +55,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             })
             .then(response => {
                 if (response.ok) {
-                    window.location.href = '/posts/latest'; // or wherever you want to redirect after deleting
+                    window.location.href = '/posts/latest';
                 } else {
                     alert('Failed to delete post');
                 }

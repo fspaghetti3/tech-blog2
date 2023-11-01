@@ -46,6 +46,10 @@ app.use(methodOverride('_method'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use('/views', express.static('views'));
+
+app.use('/styles', express.static('views/styles'))
+
 app.use(session({
     secret: 'super secret',
     resave: false,
@@ -76,7 +80,7 @@ app.post('/edit/:id', (req, res) => {
             console.error('Error updating post:', error);
             res.status(500).send('Error updating post');
         } else {
-            res.redirect('/');
+            res.redirect('/posts/' + postId);
         }
     });
 });
@@ -110,6 +114,7 @@ app.get('/posts/create', (req, res) => {
 app.get('/posts/latest', (req, res) => {
     res.render('view-posts')
 })
+
 
 sequelize.sync({ force: false }).then(() => {
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

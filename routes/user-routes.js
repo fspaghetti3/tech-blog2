@@ -3,7 +3,6 @@ const router = require('express').Router();
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
 const withAuth = require('../middleware/auth');
-const upload = require('../middleware/multer-setup')
 
 router.get('/login', (req, res) => {
     res.render('login');

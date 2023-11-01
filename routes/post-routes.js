@@ -5,7 +5,7 @@ const withAuth = require('../middleware/auth');
 
 
 
-// Create new post
+
 router.post('/', withAuth, async (req, res) => {
     console.log('POST route hit')
     try {
@@ -21,7 +21,7 @@ router.post('/', withAuth, async (req, res) => {
     }
 });
 
-// Get all posts
+
 router.get('/', async (req, res) => {
     try {
         const postData = await Post.findAll({
@@ -41,7 +41,7 @@ router.get('/', async (req, res) => {
 });
 
 
-// Get a single post by id
+
 router.get('/:id(\\d+)', async (req, res) => {
     try {
         const postData = await Post.findByPk(req.params.id, {
@@ -80,7 +80,7 @@ router.get('/:id(\\d+)', async (req, res) => {
     }
 });
 
-// Fetch post for editing
+
 router.get('/edit/:id', withAuth, async (req, res) => {
     try {
         const postData = await Post.findByPk(req.params.id, {
@@ -103,7 +103,7 @@ router.get('/edit/:id', withAuth, async (req, res) => {
     }
 });
 
-// Update a post by id
+
 router.put('/edit/:id', withAuth, async (req, res) => {
     try {
         const postData = await Post.update(
@@ -131,7 +131,7 @@ router.put('/edit/:id', withAuth, async (req, res) => {
 
 
 
-// Delete a post by id
+
 router.delete('/delete/:id', withAuth, async (req, res) => {
     try {
         await Comment.destroy({
@@ -170,7 +170,7 @@ router.get('/latest', async (req, res) => {
             order: [
                 ['createdAt', 'DESC']
             ],
-            limit: 10  // Limit to the 10 most recent posts, or any number you prefer
+            limit: 10
         });
 
         const posts = postData.map(post => post.get({ plain: true }));
