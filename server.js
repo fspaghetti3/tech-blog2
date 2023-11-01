@@ -10,6 +10,7 @@ const postRoutes = require('./routes/post-routes')
 const sequelize = require('./config/connection');
 const path = require('path');
 const methodOverride = require('method-override')
+const RedisStore = require('connect-redis')(session)
 const hbs = exphbs.create({
     helpers: {
         isAuthor: function(postUserId, sessionUserId) {
@@ -18,7 +19,17 @@ const hbs = exphbs.create({
         }
 });
 
+
+app.use(session({
+    store: new RedisStore({ client: yourRedisClient }),
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false
+}));
+
 const mysql = require('mysql2');
+
+const dbConnection = mysql.createConnection(process.env.DATABASE_URL || 'mysql://fspaghetti3:fred1231@localhost:3306/tb_db')
 
 let connection;
 
@@ -45,20 +56,6 @@ connection.connect();
 process.on('exit', () => {
     connection.end();
 });
-
-// const mysql = require('mysql2')
-// const connection = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     database: 'tb_db',
-//     password: 'fred1231'
-// });
-
-// connection.connect();
-
-// process.on('exit', () => {
-//     connection.end();
-//   });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
