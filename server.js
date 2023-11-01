@@ -18,19 +18,47 @@ const hbs = exphbs.create({
         }
 });
 
-const mysql = require('mysql2')
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    database: 'tb_db',
-    password: 'fred1231'
-});
+const mysql = require('mysql2');
+
+let connection;
+
+if (process.env.CLEARDB_DATABASE_URL) {
+    const clearDBUrl = new URL(process.env.CLEARDB_DATABASE_URL);
+    connection = mysql.createConnection({
+        host: clearDBUrl.hostname,
+        user: clearDBUrl.username,
+        database: clearDBUrl.pathname.substr(1),
+        password: clearDBUrl.password,
+        port: clearDBUrl.port || 3306
+    });
+} else {
+    connection = mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        database: 'tb_db',
+        password: 'fred1231'
+    });
+}
 
 connection.connect();
 
 process.on('exit', () => {
     connection.end();
-  });
+});
+
+// const mysql = require('mysql2')
+// const connection = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'root',
+//     database: 'tb_db',
+//     password: 'fred1231'
+// });
+
+// connection.connect();
+
+// process.on('exit', () => {
+//     connection.end();
+//   });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
