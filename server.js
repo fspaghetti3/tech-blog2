@@ -11,6 +11,8 @@ const sequelize = require('./config/connection');
 const path = require('path');
 const methodOverride = require('method-override')
 const RedisStore = require('connect-redis')(session)
+const { createClient } = require('redis')
+const redisClient = createClient();
 const hbs = exphbs.create({
     helpers: {
         isAuthor: function(postUserId, sessionUserId) {
@@ -19,13 +21,16 @@ const hbs = exphbs.create({
         }
 });
 
+const app = express();
+const PORT = process.env.PORT || 3001;
 
 app.use(session({
-    store: new RedisStore({ client: yourRedisClient }),
+    store: new RedisStore({ client: redisClient }),
     secret: 'your-secret-key',
     resave: false,
     saveUninitialized: false
 }));
+
 
 const mysql = require('mysql2');
 
@@ -57,8 +62,6 @@ process.on('exit', () => {
     connection.end();
 });
 
-const app = express();
-const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
