@@ -78,16 +78,16 @@ app.use('/views', express.static('views'));
 
 app.use('/styles', express.static('views/styles'))
 
-app.use(session({
-    secret: 'super secret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        httpOnly: true,
-        secure: false,
-        maxAge: 7200000
-    }
-}));
+// app.use(session({
+//     secret: 'super secret',
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: {
+//         httpOnly: true,
+//         secure: false,
+//         maxAge: 7200000
+//     }
+// }));
 
 app.use((req, res, next) => {
     try {
