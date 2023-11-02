@@ -10,9 +10,6 @@ const postRoutes = require('./routes/post-routes')
 const sequelize = require('./config/connection');
 const path = require('path');
 const methodOverride = require('method-override')
-const RedisStore = require('connect-redis')(session)
-const { createClient } = require('redis')
-const redisClient = createClient();
 const hbs = exphbs.create({
     helpers: {
         isAuthor: function(postUserId, sessionUserId) {
@@ -21,46 +18,22 @@ const hbs = exphbs.create({
         }
 });
 
-const app = express();
-const PORT = process.env.PORT || 3001;
-
-app.use(session({
-    store: new RedisStore({ client: redisClient }),
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: false
-}));
-
-
-const mysql = require('mysql2');
-
-
-let connection;
-
-if (process.env.CLEARDB_DATABASE_URL) {
-    const clearDBUrl = new URL(process.env.CLEARDB_DATABASE_URL);
-    connection = mysql.createConnection({
-        host: clearDBUrl.hostname,
-        user: clearDBUrl.username,
-        database: clearDBUrl.pathname.substr(1),
-        password: clearDBUrl.password,
-        port: clearDBUrl.port || 3306
-    });
-} else {
-    connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        database: 'tb_db',
-        password: 'fred1231'
-    });
-}
+const mysql = require('mysql2')
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'tb_db',
+    password: 'fred1231'
+});
 
 connection.connect();
 
 process.on('exit', () => {
     connection.end();
-});
+  });
 
+const app = express();
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -77,16 +50,16 @@ app.use('/views', express.static('views'));
 
 app.use('/styles', express.static('views/styles'))
 
-// app.use(session({
-//     secret: 'super secret',
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: {
-//         httpOnly: true,
-//         secure: false,
-//         maxAge: 7200000
-//     }
-// }));
+app.use(session({
+    secret: 'super secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        maxAge: 7200000
+    }
+}));
 
 app.use((req, res, next) => {
     try {
