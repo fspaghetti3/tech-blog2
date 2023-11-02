@@ -24,7 +24,6 @@ const url = require('url');
 
 let connection;
 
-// Check if JAWSDB_URL is available (indicating we're on Heroku with JAWSDB)
 if (process.env.JAWSDB_URL) {
     const jawsdb = url.parse(process.env.JAWSDB_URL);
     const auth = jawsdb.auth.split(':');
@@ -37,7 +36,7 @@ if (process.env.JAWSDB_URL) {
         port: jawsdb.port
     });
 } else {
-    // Local database configuration
+
     connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
@@ -59,20 +58,6 @@ process.on('exit', () => {
         console.log('Database connection closed');
     });
 });
-
-// const mysql = require('mysql2')
-// const connection = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     database: 'tb_db',
-//     password: 'fred1231'
-// });
-
-// connection.connect();
-
-// process.on('exit', () => {
-//     connection.end();
-//   });
 
 const app = express();
 const PORT = process.env.PORT || 3001;

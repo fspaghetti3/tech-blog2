@@ -22,11 +22,9 @@ const sequelize = new Sequelize(params.pathname.split('/')[1], auth[0], auth[1],
     idle: 10000
   },
 
-  // This silences the console logging of SQL queries, set to true if you want to see them
   logging: true
 });
 
-// Testing the connection
 sequelize.authenticate()
   .then(() => {
     console.log('Connection has been established successfully.');
