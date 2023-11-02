@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const url = require('url');
 
@@ -22,7 +23,7 @@ const sequelize = new Sequelize(params.pathname.split('/')[1], auth[0], auth[1],
   },
 
   // This silences the console logging of SQL queries, set to true if you want to see them
-  logging: false 
+  logging: true
 });
 
 // Testing the connection
