@@ -18,19 +18,19 @@ const hbs = exphbs.create({
         }
 });
 
-const mysql = require('mysql2')
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    database: 'tb_db',
-    password: 'fred1231'
-});
+// const mysql = require('mysql2')
+// const connection = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'root',
+//     database: 'tb_db',
+//     password: 'fred1231'
+// });
 
-connection.connect();
+// connection.connect();
 
-process.on('exit', () => {
-    connection.end();
-  });
+// process.on('exit', () => {
+//     connection.end();
+//   });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
