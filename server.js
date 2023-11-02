@@ -22,61 +22,43 @@ const hbs = exphbs.create({
 const mysql = require('mysql2');
 const url = require('url');
 
-let dbConfig;
+let connection;
 
 // Check if JAWSDB_URL is available (indicating we're on Heroku with JAWSDB)
 if (process.env.JAWSDB_URL) {
     const jawsdb = url.parse(process.env.JAWSDB_URL);
     const auth = jawsdb.auth.split(':');
 
-    dbConfig = {
+    connection = mysql.createConnection({
         host: jawsdb.hostname,
         user: auth[0],
         password: auth[1],
         database: jawsdb.pathname.substr(1),
         port: jawsdb.port
-    };
+    });
 } else {
     // Local database configuration
-    dbConfig = {
+    connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
         database: 'tb_db',
         password: 'fred1231'
-    };
+    });
 }
 
-// Create a connection pool
-const pool = mysql.createPool({
-    ...dbConfig,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
-
-// Test the connection
-pool.getConnection((err, connection) => {
+connection.connect((err) => {
     if (err) {
         console.error('Error connecting to the database:', err);
         return;
     }
     console.log('Connected to the database');
-    
-    // Release the connection back to the pool
-    connection.release();
 });
 
-// Ensure connections close gracefully
 process.on('exit', () => {
-    pool.end(() => {
-        console.log('Closed all database connections');
+    connection.end(() => {
+        console.log('Database connection closed');
     });
 });
-
-// To use the connection in your app:
-// pool.query('YOUR SQL QUERY HERE', (err, results) => {
-//     // Handle results here
-// });
 
 // const mysql = require('mysql2')
 // const connection = mysql.createConnection({
