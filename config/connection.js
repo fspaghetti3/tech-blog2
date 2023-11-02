@@ -1,12 +1,37 @@
-const Sequelize = require('sequelize');
+const { Sequelize } = require('sequelize');
+const url = require('url');
 
-const DATABASE_URL = process.env.DATABASE_URL || 'mysql://root:fred1231@localhost:3306/tb_db';
+let dbUrl = process.env.JAWSDB_URL || process.env.CLEARDB_DATABASE_URL;
+if (!dbUrl) {
+  dbUrl = 'mysql://rfl7tm97s8ylvvv8:gn5x4vwfzdbx2w8h@ckshdphy86qnz0bj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/tqd0vzz8uylev2mu  ';
+}
 
-const sequelize = new Sequelize(DATABASE_URL, {
-    dialect: 'mysql',
-    dialectOptions: {
-        ssl: process.env.USE_SSL ? { rejectUnauthorized: false } : null
-    }
+const params = url.parse(dbUrl);
+const auth = params.auth.split(':');
+
+const sequelize = new Sequelize(params.pathname.split('/')[1], auth[0], auth[1], {
+  host: params.hostname,
+  port: params.port,
+  dialect: 'mysql',
+  
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
+
+  // This silences the console logging of SQL queries, set to true if you want to see them
+  logging: false 
 });
+
+// Testing the connection
+sequelize.authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(error => {
+    console.error('Unable to connect to the database:', error);
+  });
 
 module.exports = sequelize;
