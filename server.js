@@ -20,13 +20,35 @@ const hbs = exphbs.create({
 
 
 const mysql = require('mysql2');
+const url = require('url');
 
-// Create a connection pool instead of a single connection
+let dbConfig;
+
+// Check if JAWSDB_URL is available (indicating we're on Heroku with JAWSDB)
+if (process.env.JAWSDB_URL) {
+    const jawsdb = url.parse(process.env.JAWSDB_URL);
+    const auth = jawsdb.auth.split(':');
+
+    dbConfig = {
+        host: jawsdb.hostname,
+        user: auth[0],
+        password: auth[1],
+        database: jawsdb.pathname.substr(1),
+        port: jawsdb.port
+    };
+} else {
+    // Local database configuration
+    dbConfig = {
+        host: 'localhost',
+        user: 'root',
+        database: 'tb_db',
+        password: 'fred1231'
+    };
+}
+
+// Create a connection pool
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    database: 'tb_db',
-    password: 'fred1231',
+    ...dbConfig,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
