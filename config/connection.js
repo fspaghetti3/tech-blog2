@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 const url = require('url');
 
-let dbUrl = process.env.JAWSDB_URL || process.env.CLEARDB_DATABASE_URL;
+let dbUrl = process.env.JAWSDB_URL;
 if (!dbUrl) {
   dbUrl = 'mysql://rfl7tm97s8ylvvv8:gn5x4vwfzdbx2w8h@ckshdphy86qnz0bj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/tqd0vzz8uylev2mu';
 }
