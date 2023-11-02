@@ -18,19 +18,57 @@ const hbs = exphbs.create({
         }
 });
 
-const mysql = require('mysql2')
-const connection = mysql.createConnection({
+
+const mysql = require('mysql2');
+
+// Create a connection pool instead of a single connection
+const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     database: 'tb_db',
-    password: 'fred1231'
+    password: 'fred1231',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-connection.connect();
+// Test the connection
+pool.getConnection((err, connection) => {
+    if (err) {
+        console.error('Error connecting to the database:', err);
+        return;
+    }
+    console.log('Connected to the database');
+    
+    // Release the connection back to the pool
+    connection.release();
+});
 
+// Ensure connections close gracefully
 process.on('exit', () => {
-    connection.end();
-  });
+    pool.end(() => {
+        console.log('Closed all database connections');
+    });
+});
+
+// To use the connection in your app:
+// pool.query('YOUR SQL QUERY HERE', (err, results) => {
+//     // Handle results here
+// });
+
+// const mysql = require('mysql2')
+// const connection = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'root',
+//     database: 'tb_db',
+//     password: 'fred1231'
+// });
+
+// connection.connect();
+
+// process.on('exit', () => {
+//     connection.end();
+//   });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
